@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <string.h>
+
+char firstE[10], firstT[10], firstF[10];
+int eIndex = 0, tIndex = 0, fIndex = 0;
+
+void add(char *arr, int *index, char c) {
+    for (int i = 0; i < *index; i++)
+        if (arr[i] == c) return;  // avoid duplicates
+    arr[(*index)++] = c;
+}
+
+void findFIRST_F() {
+    add(firstF, &fIndex, '(');
+    add(firstF, &fIndex, 'i');   // for id
+}
+
+void findFIRST_T() {
+    findFIRST_F();
+    for (int i = 0; i < fIndex; i++)
+        add(firstT, &tIndex, firstF[i]);
+}
+
+void findFIRST_E() {
+    findFIRST_T();
+    for (int i = 0; i < tIndex; i++)
+        add(firstE, &eIndex, firstT[i]);
+}
+
+void printSet(char *name, char arr[], int size) {
+    printf("FIRST(%s) = { ", name);
+    for (int i = 0; i < size; i++)
+        printf("%c ", arr[i]);
+    printf("}\n");
+}
+
+int main() {
+    printf("Grammar:\n");
+    printf("E -> E+T | T\n");
+    printf("T -> T F | F\n");
+    printf("F -> (E) | id\n\n");
+
+    findFIRST_E();
+
+    printSet("F", firstF, fIndex);
+    printSet("T", firstT, tIndex);
+    printSet("E", firstE, eIndex);
+
+    return 0;
+}
+
+
